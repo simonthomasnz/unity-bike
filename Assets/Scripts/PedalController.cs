@@ -12,10 +12,10 @@ public class PedalController : MonoBehaviour
     private float timeCounter = 0;
     private const float minSpeed = 0;
    
-    private float speed = 0.1f;
-    public float maxSpeed = 10.0f;
-    public float positiveSpeedIncrement = 0.075f;
-    public float negativeSpeedIncrement = 0.5f;
+    static public float speed = 0.1f;
+    private float maxSpeed = 10.0f;
+    private float positiveSpeedIncrement = 0.075f;
+    private float negativeSpeedIncrement = 0.5f;
 
     private GameObject Bike;
     private GameObject RightPedal;

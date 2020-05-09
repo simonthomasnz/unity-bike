@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static PedalController;
 
-public class BikeController : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
-    private float x = 0;
-    private float y = 0;
-    private float z = 0;
+    private float x = 6.82f;
+    private float y = 1.09f;
+    private float z = -9.13f;
 
     // Start is called before the first frame update
     void Start()
