@@ -5,9 +5,17 @@ using static PedalController;
 
 public class BikeController : MonoBehaviour
 {
+    
+    public enum WheelType {
+        Fixed,
+        Free
+    }
+    
     private float x = 0;
     private float y = 0;
     private float z = 0;
+
+    public WheelType wheelType;
 
     // Start is called before the first frame update
     void Start()
