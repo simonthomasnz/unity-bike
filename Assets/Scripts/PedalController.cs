@@ -11,14 +11,13 @@ public class PedalController : MonoBehaviour
 
     private float timeCounter = 0;
     private const float minSpeed = 0;
-   
-    private float speed = 0.1f;
-    public float maxSpeed = 10.0f;
-    public float positiveSpeedIncrement = 0.075f;
-    public float negativeSpeedIncrement = 0.5f;
 
-    
-    
+    static public float speed = 0.1f;
+    private float maxSpeed = 10.0f;
+    private float positiveSpeedIncrement = 0.075f;
+    private float negativeSpeedIncrement = 0.1f;
+
+    private GameObject Bike;
     private GameObject RightPedal;
     private GameObject LeftPedal;
 
@@ -30,8 +29,9 @@ public class PedalController : MonoBehaviour
     private float zR;
 
     private void Start() {
-        RightPedal = GameObject.Find("Right_Pedal");;
-        LeftPedal = GameObject.Find("Left_Pedal");
+        Bike = GameObject.Find("Bike");
+        RightPedal = Bike.transform.Find("Right_Pedal").gameObject;
+        LeftPedal = Bike.transform.Find("Left_Pedal").gameObject;
     }
 
     private void FixedUpdate () {
@@ -41,13 +41,13 @@ public class PedalController : MonoBehaviour
         if (Input.GetAxis("Horizontal") != 0) // necessary? Does it save anything?
         {
             // If pressing right, check where the right pedal is through its rotation. 
-            // If right pedal is between top point and bottom point, accelerate towards max speed
+            // If right pedal is between top point and bottom point, accelerate towards max speed, proportional to the moment applicable (approximated by z position 0-1)
             // Else if right pedal is beyond bottom or before top, decelerate towards 0
             if (Input.GetAxis("Horizontal") >= 0) 
             {
-                if (RightPedal.transform.position.z >= 0)
+                if (RightPedal.transform.localPosition.z >= 0)
                 {
-                    speed = Mathf.Min((speed + positiveSpeedIncrement), maxSpeed);
+                    speed = Mathf.Min((speed + positiveSpeedIncrement * RightPedal.transform.localPosition.z), maxSpeed);
                 }
                 else 
                 {
@@ -56,13 +56,13 @@ public class PedalController : MonoBehaviour
                 timeCounter -= Time.deltaTime * speed;
             }
             // If pressing left, check where the left pedal is through its rotation. 
-            // If left pedal is between top point and bottom point, accelerate towards max speed
+            // If left pedal is between top point and bottom point, accelerate towards max speed, proportional to the moment applicable (approximated by z position 0-1)
             // Else if left pedal is beyond bottom or before top, decelerate towards 0
             else if (Input.GetAxis("Horizontal") <= 0) 
             {
-                if (LeftPedal.transform.position.z >= 0)
+                if (LeftPedal.transform.localPosition.z >= 0)
                 {
-                    speed = Mathf.Min((speed + positiveSpeedIncrement), maxSpeed);
+                    speed = Mathf.Min((speed + positiveSpeedIncrement * LeftPedal.transform.localPosition.z), maxSpeed);
                 }
                 else 
                 {
@@ -70,7 +70,12 @@ public class PedalController : MonoBehaviour
                 }
                 timeCounter -= Time.deltaTime * speed;
             }
-        }    
+        }
+        // else decrease speed to 0 
+        else 
+        {
+            speed = Mathf.Max((speed - negativeSpeedIncrement), minSpeed);
+        }
         // Right pedal new position
         xR = 2.0f;
         yR = Mathf.Sin (timeCounter);
@@ -84,7 +89,7 @@ public class PedalController : MonoBehaviour
 
     private void Update() {
         // Move pedals
-        RightPedal.transform.position = new Vector3 (xR, yR, zR);
-        LeftPedal.transform.position = new Vector3 (xL, yL, zL);
+        RightPedal.transform.localPosition = new Vector3 (xR, yR, zR);
+        LeftPedal.transform.localPosition = new Vector3 (xL, yL, zL);
     }
 }
